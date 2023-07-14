@@ -4,51 +4,54 @@
 </head>
 
 <body>
-<h1><b>Welcome To Password Saver!</h1>
+    <h1><b>Welcome To Password Saver!</b></h1>
 
-    <form action="/">
+    <form action="#" method="post">
       <input type="text" name="username" placeholder="Username" />
       <input type="text" name="password" placeholder="Password" />
       <input type="submit" />
     </form>
+    {% block content %}
+        <p>{{ text }}</p>
+    {% endblock content %}
 </body>
-<script>
-    // Grab the form and fire off this function when submit button is clicked
-    document.querySelector("form").onsubmit = function(e) {
-      // Prevent page from reloading on submit
-      e.preventDefault();
+<!--<script>-->
+<!--    // Grab the form and fire off this function when submit button is clicked-->
+<!--    document.querySelector("form").onsubmit = function(e) {-->
+<!--      // Prevent page from reloading on submit-->
+<!--      e.preventDefault();-->
 
-      // Create form structure to populate and send to API
-      let formData = new FormData();
+<!--      // Create form structure to populate and send to API-->
+<!--      let formData = new FormData();-->
 
-      // Grab content from form
-      let username = document.querySelector("input[name=username]").value;
-      let password = document.querySelector("input[name=password]").value;
+<!--      // Grab content from form-->
+<!--      let username = document.querySelector("input[name=username]").value;-->
+<!--      let password = document.querySelector("input[name=password]").value;-->
 
-      // Populate form
-      formData.append("username", username);
-      formData.append("password", password);
+<!--      // Populate form-->
+<!--      formData.append("username", username);-->
+<!--      formData.append("password", password);-->
 
-     
-      fetch("/", {
-        method: "POST",
-        body: formData
-      })
-        .then(function(response) {
-          // This right here is the response we will receive before we convert
-          // it over to readable JSON
-          // console.log("Response turning to readable JSON", response);
-         // return response.json();
-        })
-        .then(function(response) {
-          // Don't worry if this says "false", it just returns that when the user already exists from flasks end
-          // Once it reaches here, the async is already successful
-          console.log("Successful async: ", JSON.stringify(response));
+<!--     -->
+<!--      fetch("/", {-->
+<!--        method: "POST",-->
+<!--        body: formData-->
+<!--      })-->
+<!--        .then(function(response) {-->
+<!--          // This right here is the response we will receive before we convert-->
+<!--          // it over to readable JSON-->
+<!--          // console.log("Response turning to readable JSON", response);-->
+<!--         // return response.json();-->
+<!--        })-->
+<!--        .then(function(response) {-->
+<!--          // Don't worry if this says "false", it just returns that when the user already exists from flasks end-->
+<!--          // Once it reaches here, the async is already successful-->
+<!--          console.log("Successful async: ", JSON.stringify(response));-->
 
-        })
-        .catch(function(error) {
-          console.log("Error in async", error);
-        });
-    };
-  </script>
+<!--        })-->
+<!--        .catch(function(error) {-->
+<!--          console.log("Error in async", error);-->
+<!--        });-->
+<!--    };-->
+<!--  </script>-->
 </html>
