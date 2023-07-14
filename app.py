@@ -3,9 +3,9 @@ from flask_behind_proxy import FlaskBehindProxy
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-
+import random
 Base = declarative_base()
-
+from Password import *
 
 class Users(Base):
     __tablename__ = 'users'
@@ -75,17 +75,43 @@ def dashboard(user):
     return render_template('dashboard.html', user=user)
 
 
-@app.route('/create_password/<user>', methods=['POST', 'GET'])
+#@app.route('/create_password/<user>', methods=['POST', 'GET'])
+@app.route('/create_password', methods=['POST', 'GET'])
 def create_password():
     if request.method == 'POST':
         return render_template('passwordCreator.html', text='saved the password')
     return render_template('passwordCreator.html')
 
+#@app.route('/randomPassword', methods=['POST'])
+#def random_password():
+@app.route('/randomPassword', methods=['GET', 'POST'])
+def random_password():
+    length = int(request.form.get('len', 10))
+    special = int(request.form.get('spec', 0))
+    number = int(request.form.get('num', 0))
+    upper = int(request.form.get('upper', 0))
+    lower = int(request.form.get('lower', 0))
+
+    password = Create_Password(length, special, number, lower, upper)
+    return password
+
+@app.route('/savedata', methods=['POST'])
+def process_strings():
+    website = request.form.get('web')
+    password = request.form.get('pass')
+    save_data(website, password)
+
+def save_data(website, password):
+    # Inserts the password into the database
+    new_entry = Passwords(, website, 'Milton')
+    try:
+        session.add(new_entry)
+        session.commit()
 
 @app.route('/password_store/<user>')
 def password_store(user):
     # this is a test entry
-    new_entry = Passwords(12345, 'https://pornhub.com', 'password', 'tochiboy')
+    new_entry = Passwords(12345, 'https://codio.com', 'password', 'tochiboy')
     new_new_entry = Passwords(54321, 'https://youtube.com', '12345678', 'tochiboy')
     # adds the entries to the db
     try:
