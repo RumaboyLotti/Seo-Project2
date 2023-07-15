@@ -4,6 +4,8 @@ from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import random
+import json
+import sqlalchemy as db
 Base = declarative_base()
 from Password import *
 
@@ -79,6 +81,7 @@ def dashboard(user):
 @app.route('/create_password', methods=['POST', 'GET'])
 def create_password():
     if request.method == 'POST':
+        print(json.request)
         return render_template('passwordCreator.html', text='saved the password')
     return render_template('passwordCreator.html')
 
@@ -103,10 +106,12 @@ def process_strings():
 
 def save_data(website, password):
     # Inserts the password into the database
-    new_entry = Passwords(, website, 'Milton')
+    new_entry = Passwords(50000, website, 'Milton')
     try:
         session.add(new_entry)
         session.commit()
+    except:
+        i=1
 
 @app.route('/password_store/<user>')
 def password_store(user):
@@ -128,6 +133,16 @@ def password_store(user):
         string += f'{r}\n'
     # puts them all in one string and puts that on the show passwords
     return render_template('passwordStore.html', text=string)
+
+@app.route('/show_password')
+def show_password():
+    random = "SELECT * FROM passwords "
+    p = ''
+    with engine.connect() as connection:   
+        p = connection.execute(db.text(random))
+        print(p.fetchall())
+    return 'success'
+   
 
 
 # @app.route("/api", methods=["POST", "GET"])
@@ -168,6 +183,7 @@ def password_store(user):
     # return redirect(url_for('password_store'))
 
     # https://flask-login.readthedocs.io/en/latest/
+
 
 
 if __name__ == '__main__':
