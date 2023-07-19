@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect, request, jsonify
 from flask_behind_proxy import FlaskBehindProxy
-from sqlalchemy import create_engine, Column, String, Integer, ForeignKey, text
+from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import random
@@ -85,7 +85,7 @@ def dashboard(user):
     return render_template('dashboard.html', user=user)
 
 
-@app.route('/create_password<user>', methods=['POST', 'GET'])
+@app.route('/create_password', methods=['POST', 'GET'])
 def create_password():
     if request.method == 'POST':
         print(json.request)
@@ -121,35 +121,43 @@ def save_data(website, password):
 
 # @app.route('/password_store/<user>')
 # def password_store(user):
-# # this is a test entry
-# new_entry = Passwords(12345, 'https://codio.com', 'password', 'tochiboy')
-# new_new_entry = Passwords(54321, 'https://youtube.com', '12345678', 'tochiboy')
-# # adds the entries to the db
-# try:
-#     session.add(new_entry)
-#     session.add(new_new_entry)
-#     session.commit()
-# except:
-#     i = 1
+#     # this is a test entry
+#     new_entry = Passwords(12345, 'https://codio.com', 'password', 'tochiboy')
+#     new_new_entry = Passwords(54321, 'https://youtube.com', '12345678', 'tochiboy')
+#     # adds the entries to the db
+#     try:
+#         session.add(new_entry)
+#         session.add(new_new_entry)
+#         session.commit()
+#     except:
+#         i = 1
 
-# # finds only the entries with the correct username attached
-# results = session.query(Passwords).where(Passwords.user == user)
-# string = ''
-# for r in results:
-#     string += f'{r}\n'
-# # puts them all in one string and puts that on the show passwords
-# return render_template('passwordStore.html', text=string)
+#     # finds only the entries with the correct username attached
+#     results = session.query(Passwords).where(Passwords.user == user)
+#     string = ''
+#     for r in results:
+#         string += f'{r}\n'
+#     # puts them all in one string and puts that on the show passwords
+#     return render_template('passwordStore.html', text=string)
 
-@app.route('/password_show/<user>', methods=['GET'])
-# define a route show password and from there slect all passwords from the database and display it
-def show_password(user):
-    if request.method == 'GET':
-        query = "SELECT * FROM passwords WHERE user = :user"
-        with engine.connect() as connection:
-            result = connection.execute(text(query), user=user)
-            passwords = result.fetchall()
-    return render_template('passwordStore.html', text=passwords)
+# @app.route('/show_password')
+# # define a route show password and from there slect all passwords from the database and display it
+# def show_password():
+#     random = "SELECT * FROM passwords "
+#     p = 'asl'
+#     # engine is a global variable linking to db and using the execute method to run the query 
+#     with engine.connect() as connection:   
+#         p = connection.execute(db.text(random))
+#         print(p.fetchall())
+#     return render_template('passwordStore.html', text = print(p))
    
+@app.route('/password_store/<user>', methods=['GET'])
+def show_password(user):
+    session = Session()
+    user_data = session.query(Users).filter_by(user_name=user).first()
+    password = user_data.user_pwd if user_data else None
+    session.close()
+    return render_template('passwordStore.html', password=password)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
